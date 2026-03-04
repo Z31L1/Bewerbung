@@ -10,15 +10,26 @@ let isBooted = false;
  */
 
 async function loadBewerbungSecure() {
-    const params = new URLSearchParams(window.location.search);
-    const firma = params.get('firma');
-    const passphrase = window.location.hash.substring(1);
+    const btn = document.querySelector('.scroll-down-btn');
+    const hashContent = window.location.hash.substring(1);
+    const KEY_LENGTH = 17;
 
-    if (!firma || !passphrase) return;
+    if (!hashContent || hashContent.length < KEY_LENGTH) {
+        console.error("Ungültiger Passphrase-Länge.");
+        btn.ariaDisabled = true;
+        return;
+    }
 
-    const decrypt = async (fileName) => {
-        const res = await fetch(`/assets/secure/${fileName}.enc`);
-        if (!res.ok) throw new Error(`${fileName}.enc nicht gefunden`);
+    // Alles VOR den letzten 17 Zeichen ist die Datei (der Matsch)
+    const fileId = hashContent.slice(0, -KEY_LENGTH);
+    
+    // Die letzten exakt 17 Zeichen sind der Key
+    const passphrase = hashContent.slice(-KEY_LENGTH);
+
+    const decrypt = async (fileId) => {
+        const res = await fetch(`/assets/secure/${fileId}.enc`);
+        
+        if (!res.ok) throw new Error(`${fileId}.enc nicht gefunden`);
         
         const base64Data = await res.text();
         const buffer = Uint8Array.from(atob(base64Data.trim()), c => c.charCodeAt(0));
@@ -51,14 +62,13 @@ async function loadBewerbungSecure() {
     };
 
     try {
-        const [me, company] = await Promise.all([decrypt('me'), decrypt(firma)]);
+        const [firma] = await Promise.all([decrypt(firma)]);
         
         // Injektion in dein HTML
-        document.getElementById('my-absender').innerHTML = `<strong>${me.name}</strong><br>${me.address}<br>${me.contact}`;
-        document.getElementById('target-address').innerHTML = company.company_address;
-        document.getElementById('dynamic-betreff').innerText = company.betreff;
-        document.getElementById('dynamic-content').innerHTML = company.text;
-        document.getElementById('current-date').innerText = company.datum || new Date().toLocaleDateString('de-DE');
+        document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
+        document.getElementById('dynamic-betreff').innerText = firma.betreff;
+        document.getElementById('dynamic-content').innerHTML = firma.text;
+        document.getElementById('current-date').innerText = firma.datum || new Date().toLocaleDateString('de-DE');
 
         console.log("Tresor erfolgreich geöffnet.");
     } catch (err) {

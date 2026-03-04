@@ -217,11 +217,19 @@ body.scrolled .hintergrund-container {
     flex-direction: column;
 }
 
+/* In deinem CSS-Teil für den Brief-Look */
 .absender-block {
-    font-size: 0.95rem;
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    text-align: center;
+    opacity: 0; /* Standardmäßig unsichtbar */
+    transform: translateY(-10px);
+    transition: all 0.8s ease-in-out;
+    pointer-events: none; /* Keine Interaktion möglich */
+}
+
+/* Erst wenn das System "gebootet" hat, wird der Absender sichtbar */
+body.scrolled .absender-block {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .empfaenger-block {
