@@ -62,13 +62,13 @@ async function loadBewerbungSecure() {
     };
 
     try {
-        const [firma] = await Promise.all([decrypt(firma)]);
+        const [fileId] = await Promise.all([decrypt(fileId)]);
         
         // Injektion in dein HTML
         document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
-        document.getElementById('dynamic-betreff').innerText = firma.betreff;
-        document.getElementById('dynamic-content').innerHTML = firma.text;
-        document.getElementById('current-date').innerText = firma.datum || new Date().toLocaleDateString('de-DE');
+        document.getElementById('dynamic-betreff').innerText = fileId.betreff;
+        document.getElementById('dynamic-content').innerHTML = fileId.text;
+        document.getElementById('current-date').innerText = fileId.datum || new Date().toLocaleDateString('de-DE');
 
         console.log("Tresor erfolgreich geöffnet.");
     } catch (err) {
