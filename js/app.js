@@ -70,7 +70,7 @@ async function loadBewerbungSecure() {
     document.getElementById('dynamic-betreff').innerText = daten.betreff;
     document.getElementById('dynamic-content').innerHTML = daten.text;
     document.getElementById('current-date').innerText = daten.datum || new Date().toLocaleDateString('de-DE');
-    document.getElementById('target-address').innerText = daten.company_address;
+
     console.log("System-Status: Tresorinhalt erfolgreich hydriert.");
 } catch (err) {
     console.error("Krypto-GAU:", err);
