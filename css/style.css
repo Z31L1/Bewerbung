@@ -174,6 +174,78 @@ body.scrolled .haupt-container section:not(:first-child) {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- BRIEF-LAYOUT KORREKTUR --- */
+
+//* 1. Grundzustand für beide Blöcke (Vorbereitet, aber unsichtbar) */
+.absender-block, 
+.empfaenger-block {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.8s var(--easing-custom);
+    pointer-events: none;
+    visibility: visible !important; /* Muss visible sein, damit opacity wirken kann */
+}
+
+/* Spezifische Positionierung */
+.absender-block {
+    text-align: right;
+    font-size: 0.9rem !important;
+    color: #333 !important;
+    margin-bottom: 3rem;
+}
+
+.empfaenger-block {
+    text-align: left;
+    font-size: 1rem !important;
+    color: #1a1a1a !important;
+    border-left: 2px solid var(--neon-cyan);
+    padding-left: 15px;
+    margin-bottom: 2rem;
+}
+
+/* 2. Aktivierung durch Scroll ODER erfolgreichen Krypto-Load */
+body.scrolled .absender-block,
+body.scrolled .empfaenger-block,
+body.data-loaded .absender-block,
+body.data-loaded .empfaenger-block {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto;
+}
+
+/* Ergänzung für den Brief-Look in deiner CSS */
+
+.absender-block {
+    text-align: right; /* Absender klassisch rechts oben */
+    font-size: 0.9rem !important;
+    line-height: 1.4;
+    margin-bottom: 3rem;
+    color: #333 !important; /* Etwas weicher als reines Schwarz */
+    opacity: 0; 
+    transform: translateY(-10px);
+    transition: all 0.8s var(--easing-custom);
+}
+
+.empfaenger-block {
+    text-align: left; /* Empfänger klassisch links */
+    font-size: 1rem !important;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    color: #1a1a1a !important;
+    /* Optional: Ein leichter blauer Akzent-Strich links */
+    border-left: 2px solid var(--neon-cyan);
+    padding-left: 15px;
+}
+
+/* Sichtbarkeit steuern */
+body.scrolled .absender-block,
+body.scrolled .empfaenger-block {
+  visibility: visible;  
+  opacity: 0;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
 /* Hintergrund-Video Initialisierung */
 .hintergrund-container {
     position: fixed;
@@ -217,29 +289,6 @@ body.scrolled .hintergrund-container {
     flex-direction: column;
 }
 
-/* In deinem CSS-Teil für den Brief-Look */
-.absender-block {
-    opacity: 0; /* Standardmäßig unsichtbar */
-    transform: translateY(-10px);
-    transition: all 0.8s ease-in-out;
-    pointer-events: none; /* Keine Interaktion möglich */
-}
-
-/* Erst wenn das System "gebootet" hat, wird der Absender sichtbar */
-body.scrolled .absender-block {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.empfaenger-block {
-  font-size: 0.95rem !important;;
-    margin-bottom: 2rem;
-    width: fit-content; 
-    text-align: left; 
-    line-height: 1.2;
-    color: #1a1a1a !important;
-}
 
 /* Datum ebenfalls rechts (falls noch nicht geschehen) */
 .datum-zeile {

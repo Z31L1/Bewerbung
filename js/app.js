@@ -13,6 +13,11 @@ async function loadBewerbungSecure() {
     const btn = document.querySelector('.scroll-down-btn');
     const hashContent = window.location.hash.substring(1);
     const KEY_LENGTH = 17;
+// Alles VOR den letzten 17 Zeichen ist die Datei (der Matsch)
+    const fileId = hashContent.slice(0, -KEY_LENGTH);
+    
+    // Die letzten exakt 17 Zeichen sind der Key
+    const passphrase = hashContent.slice(-KEY_LENGTH);
 
     if (!hashContent || hashContent.length < KEY_LENGTH) {
         console.error("Ungültiger Passphrase-Länge.");
@@ -20,11 +25,6 @@ async function loadBewerbungSecure() {
         return;
     }
 
-    // Alles VOR den letzten 17 Zeichen ist die Datei (der Matsch)
-    const fileId = hashContent.slice(0, -KEY_LENGTH);
-    
-    // Die letzten exakt 17 Zeichen sind der Key
-    const passphrase = hashContent.slice(-KEY_LENGTH);
 
     const decrypt = async (fileId) => {
         const res = await fetch(`/assets/secure/${fileId}.enc`);
@@ -62,20 +62,23 @@ async function loadBewerbungSecure() {
     };
 
     try {
-        const [fileId] = await Promise.all([decrypt(fileId)]);
-        
-        // Injektion in dein HTML
-        document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
-        document.getElementById('dynamic-betreff').innerText = fileId.betreff;
-        document.getElementById('dynamic-content').innerHTML = fileId.text;
-        document.getElementById('current-date').innerText = fileId.datum || new Date().toLocaleDateString('de-DE');
+    // Wir nennen das Ergebnis 'daten', um nicht mit der 'fileId' (dem String) zu kollidieren
+    const [daten] = await Promise.all([decrypt(fileId)]);
+    
+    // Injektion mit dem neuen Objektnamen
+    document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
+    document.getElementById('dynamic-betreff').innerText = daten.betreff;
+    document.getElementById('dynamic-content').innerHTML = daten.text;
+    document.getElementById('current-date').innerText = daten.datum || new Date().toLocaleDateString('de-DE');
 
-        console.log("Tresor erfolgreich geöffnet.");
-    } catch (err) {
-        console.error("Krypto-GAU:", err);
-        document.getElementById('dynamic-content').innerHTML = "Zugriff verweigert: Falscher Schlüssel.";
-    }
+    console.log("System-Status: Tresorinhalt erfolgreich hydriert.");
+} catch (err) {
+    console.error("Krypto-GAU:", err);
+    const content = document.getElementById('dynamic-content');
+    if (content) content.innerHTML = "<span class='error'>System-Fehler: Integrität der Passphrase nicht verifizierbar.</span>";
 }
+}
+
 document.addEventListener('DOMContentLoaded', loadBewerbungSecure);
 
 // --- 2. SYSTEM-BOOT & SCROLL-LOGIK ---
