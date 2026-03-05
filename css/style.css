@@ -176,7 +176,7 @@ body.scrolled .haupt-container section:not(:first-child) {
 
 /* --- BRIEF-LAYOUT KORREKTUR --- */
 
-//* 1. Grundzustand für beide Blöcke (Vorbereitet, aber unsichtbar) */
+/* 1. Grundzustand für beide Blöcke (Vorbereitet, aber unsichtbar) */
 .absender-block, 
 .empfaenger-block {
     opacity: 0;
@@ -196,9 +196,8 @@ body.scrolled .haupt-container section:not(:first-child) {
 
 .empfaenger-block {
     text-align: left;
-    font-size: 1rem !important;
-    color: #1a1a1a !important;
-    border-left: 2px solid var(--neon-cyan);
+    font-size: 0.9rem !important;
+    color: #333 !important;
     padding-left: 15px;
     margin-bottom: 2rem;
 }
@@ -228,12 +227,10 @@ body.data-loaded .empfaenger-block {
 
 .empfaenger-block {
     text-align: left; /* Empfänger klassisch links */
-    font-size: 1rem !important;
-    line-height: 1.2;
+    font-size: 0.9rem !important;
+    line-height: 1.4;
     margin-bottom: 2rem;
-    color: #1a1a1a !important;
-    /* Optional: Ein leichter blauer Akzent-Strich links */
-    border-left: 2px solid var(--neon-cyan);
+    color: #333 !important;
     padding-left: 15px;
 }
 
