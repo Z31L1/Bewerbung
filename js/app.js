@@ -64,13 +64,13 @@ async function loadBewerbungSecure() {
     try {
     // Wir nennen das Ergebnis 'daten', um nicht mit der 'fileId' (dem String) zu kollidieren
     const [daten] = await Promise.all([decrypt(fileId)]);
-    
+    document.body.classList.add('data-loaded');
     // Injektion mit dem neuen Objektnamen
     document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
     document.getElementById('dynamic-betreff').innerText = daten.betreff;
     document.getElementById('dynamic-content').innerHTML = daten.text;
     document.getElementById('current-date').innerText = daten.datum || new Date().toLocaleDateString('de-DE');
-
+    document.getElementById('target-address').innerText = daten.company_address;
     console.log("System-Status: Tresorinhalt erfolgreich hydriert.");
 } catch (err) {
     console.error("Krypto-GAU:", err);
