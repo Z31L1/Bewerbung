@@ -27,7 +27,7 @@ async function loadBewerbungSecure() {
 
 
     const decrypt = async (fileId) => {
-        const res = await fetch(`/assets/secure/${fileId}.enc`);
+        const res = await fetch(`assets/secure/${fileId}.enc`);
         
         if (!res.ok) throw new Error(`${fileId}.enc nicht gefunden`);
         
