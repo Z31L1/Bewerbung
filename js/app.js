@@ -13,7 +13,6 @@ async function loadBewerbungSecure() {
     const btn = document.querySelector('.scroll-down-btn');
     const hashContent = window.location.hash.substring(1);
     const KEY_LENGTH = 17;
-// Alles VOR den letzten 17 Zeichen ist die Datei (der Matsch)
     const fileId = hashContent.slice(0, -KEY_LENGTH);
     
     // Die letzten exakt 17 Zeichen sind der Key
@@ -41,15 +40,15 @@ async function loadBewerbungSecure() {
 
         // --- 2. Key-Sync (Null-Byte Padding) ---
         const encoder = new TextEncoder();
-        const keyArray = new Uint8Array(32); // Alle 32 Bytes sind initial 0x00
+        const keyArray = new Uint8Array(32); 
         const encodedPass = encoder.encode(passphrase);
-        keyArray.set(encodedPass.slice(0, 32)); // Key reinkopieren
+        keyArray.set(encodedPass.slice(0, 32)); 
 
         const key = await crypto.subtle.importKey(
             "raw", keyArray, "AES-GCM", false, ["decrypt"]
         );
 
-        // --- 3. Entschlüsselung (Tag muss ans Ende des Buffers für WebCrypto) ---
+        // --- 3. Entschlüsselung  ---
         const dataToDecrypt = new Uint8Array([...ciphertext, ...tag]);
 
         const decBuffer = await crypto.subtle.decrypt(
@@ -62,11 +61,12 @@ async function loadBewerbungSecure() {
     };
 
     try {
-    // Wir nennen das Ergebnis 'daten', um nicht mit der 'fileId' (dem String) zu kollidieren
+    // Wir nennen das Ergebnis 'daten', um nicht mit der 'fileId' zu kollidieren
     const [daten] = await Promise.all([decrypt(fileId)]);
     document.body.classList.add('data-loaded');
     // Injektion mit dem neuen Objektnamen
     document.getElementById('my-absender').innerHTML = `<strong>Zeilberger Stefan</strong><br>Wienerstrasse 230, 4030 Linz<br>Mobil: +43 660 400 68 07 | Email: Z31L1@gmx.at`;
+    document.getElementById('dynamic-company').innerHTML = daten.company_address;
     document.getElementById('dynamic-betreff').innerText = daten.betreff;
     document.getElementById('dynamic-content').innerHTML = daten.text;
     document.getElementById('current-date').innerText = daten.datum || new Date().toLocaleDateString('de-DE');
